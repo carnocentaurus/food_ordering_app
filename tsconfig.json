@@ -3,6 +3,9 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "noImplicitAny": true,           /* Error on expressions and declarations with an implied 'any' type */
+    "noImplicitReturns": true,       /* Report error when not all code paths in function return a value */
+    "noImplicitThis": true,          /* Raise error on 'this' expressions with an implied 'any' type */
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
