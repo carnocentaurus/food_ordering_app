@@ -22,28 +22,6 @@ export default function MenuStack() {
             ),
         }}>
             <Stack.Screen name='index' options={{ title: 'Menu' }} />
-
-            {/* New Dynamic Route Screen */}
-            <Stack.Screen 
-                name='[id]' 
-                options={{ 
-                    title: 'Details',
-                    headerRight: () => (
-                        <Link href="/" asChild>
-                            <Pressable style={{ marginRight: 15 }}>
-                                {({ pressed }) => (
-                                    <SymbolView
-                                        name={{ ios: 'pencil', android: 'edit', web: 'edit' }}
-                                        size={25}
-                                        tintColor={Colors.light.tint}
-                                        style={{ opacity: pressed ? 0.5 : 1 }}
-                                    />
-                                )}
-                            </Pressable>
-                        </Link>
-                    )
-                }} 
-            />
         </Stack>
     );
 }

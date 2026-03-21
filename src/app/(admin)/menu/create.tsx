@@ -4,13 +4,16 @@ import { useState } from 'react';
 import { defaultPizzaImg } from '@/app/components/ProductListItem';
 import Colors from 'constants/Colors';
 import * as ImagePicker from 'expo-image-picker';
-import { Stack } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 
 const CreateProductScreen = () => {
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [errors, setErrors] = useState('');
     const [image, setImage] = useState<string | null>(null);
+
+    const {id} = useLocalSearchParams();
+    const isUpdating = !!id;
 
     const resetFields = () => {
         setName('');
@@ -35,7 +38,23 @@ const CreateProductScreen = () => {
         return true;
     }
 
+    const onSubmit = () => {
+        if (isUpdating) {
+            // update
+            onUpdateCreate();
+        }
+        else {
+            onCreate();
+        }
+    }
+
     const onCreate = () => {
+        if (!validateInput()) return;
+        // save to db logic here
+        resetFields();
+    }
+
+    const onUpdateCreate = () => {
         if (!validateInput()) return;
         // save to db logic here
         resetFields();
@@ -61,9 +80,27 @@ const CreateProductScreen = () => {
         }
     };
 
+    const onDelete = () => {
+        Alert.alert('Confirm', 'Are you sure you want to delete this product?', [
+            {
+                text: 'Cancel'
+            },
+
+            {
+                text: 'Delete',
+                style: 'destructive',
+                onPress: onDelete
+            }
+        ]);
+    }
+
+    const confirmDelete = () => {
+
+    }
+
     return (
         <View style={styles.container}>
-            <Stack.Screen options={{title: 'Create Product'}} />
+            <Stack.Screen options={{title: isUpdating ? 'Update Product' : 'Create Product'}} />
 
             <Image source={{ uri: image || defaultPizzaImg }} style={styles.image} />
             <Text onPress={pickImage} style={styles.textButton}>Select Image</Text>
@@ -88,7 +125,8 @@ const CreateProductScreen = () => {
             />
 
             {errors ? <Text style={{ color: 'red', marginBottom: 15 }}>{errors}</Text> : null}
-            <Button onPress={onCreate} text='Create' />
+            <Button onPress={onSubmit} text={isUpdating ? 'Update' : 'Create'} />
+            {isUpdating && <Text onPress={confirmDelete} style={styles.textButton}>Delete</Text>}
         </View>
     );
 };

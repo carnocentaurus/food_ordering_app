@@ -1,12 +1,13 @@
 import {View, Text, Image, StyleSheet, Pressable} from 'react-native';
 import React from 'react';
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter, Link } from 'expo-router';
 import products from '@assets/data/products';
 import { defaultPizzaImg } from '@/app/components/ProductListItem';
 import { useState } from 'react';
-import Button from '@/app/components/Button';
 import { useCart } from '@/app/providers/CartProvider';
 import { PizzaSize } from '@/app/types';
+import { SymbolView } from 'expo-symbols';
+import Colors from 'constants/Colors';
 
 const sizes: PizzaSize[] = ['S', 'M', 'L', 'XL'];
 
@@ -34,6 +35,27 @@ const ProductDetailsScreen = () => {
 
     return(
         <View style={styles.container}>
+            {/* Dynamic Route Screen */}
+            <Stack.Screen 
+                options={{ 
+                    title: 'Details',
+                    headerRight: () => (
+                        <Link href={`/(admin)/menu/create?id=${id}`} asChild>
+                            <Pressable style={{ marginRight: 15 }}>
+                                {({ pressed }) => (
+                                    <SymbolView
+                                        name={{ ios: 'pencil', android: 'edit', web: 'edit' }}
+                                        size={25}
+                                        tintColor={Colors.light.tint}
+                                        style={{ opacity: pressed ? 0.5 : 1 }}
+                                    />
+                                )}
+                            </Pressable>
+                        </Link>
+                    )
+                }} 
+            />
+
             <Stack.Screen options={{ title: product?.name }} />
   
             <Image 
