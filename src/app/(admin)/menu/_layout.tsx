@@ -7,7 +7,7 @@ export default function MenuStack() {
     return (
         <Stack screenOptions={{
             headerRight: () => (
-                <Link href="/cart" asChild>
+                <Link href="/(admin)/menu/create" asChild>
                     <Pressable style={{ marginRight: 15 }}>
                         {({ pressed }) => (
                             <SymbolView
