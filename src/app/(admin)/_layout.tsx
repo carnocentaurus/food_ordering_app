@@ -44,6 +44,7 @@ export default function TabLayout() {
         name="orders"
         options={{
           title: 'Orders',
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <SymbolView
               name={{
