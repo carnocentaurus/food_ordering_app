@@ -1,7 +1,10 @@
-import { Redirect } from "expo-router";
+import { router } from "expo-router";
+import { useEffect } from "react";
 
 export default function TabIndex() {
+    useEffect(() => {
+        router.replace('/(user)/menu/');
+    }, []);
 
-    return <Redirect href={'/(user)/menu/'}/>;
-
+    return null;
 }

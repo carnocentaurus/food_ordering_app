@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useEffect, useContext } from "react";
+import { createContext, PropsWithChildren, useEffect, useContext, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { useState } from "react";
@@ -43,12 +43,34 @@ export default function AuthProvider({children}: PropsWithChildren) {
 
         fetchSession();
 
-        supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
             setSession(session);
+            if (session) {
+                // fetch profile
+                const { data } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', session.user.id)
+                .single();
+                setProfile(data || null);
+            } else {
+                setProfile(null);
+            }
         });
+
+        return () => {
+            subscription.unsubscribe();
+        }
     }, [])
 
-    return <AuthContext.Provider value={{session, loading, profile, isAdmin: profile?.group === 'ADMIN'}}>{children}</AuthContext.Provider>
+    const value = useMemo(() => ({
+        session,
+        loading,
+        profile,
+        isAdmin: profile?.group === 'ADMIN'
+    }), [session, loading, profile]);
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => useContext(AuthContext);

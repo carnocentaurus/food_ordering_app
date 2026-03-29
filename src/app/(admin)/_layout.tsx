@@ -1,16 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SymbolView } from 'expo-symbols';
-import { Tabs, Redirect } from 'expo-router';
+import { Tabs, router } from 'expo-router';
 import Colors from '@/app/constants/Colors';
 import { useColorScheme } from '@/app/components/useColorScheme';
 import { useClientOnlyValue } from '@/app/components/useClientOnlyValue';
 import { useAuth } from '../providers/AuthProvider';
+import { ActivityIndicator } from 'react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const {isAdmin} = useAuth();
+  const {isAdmin, loading} = useAuth();
 
-  if (!isAdmin) return <Redirect href={'/'} />
+  useEffect(() => {
+    if (!loading && !isAdmin) {
+      router.replace('/');
+    }
+  }, [isAdmin, loading]);
+
+  if (loading) return <ActivityIndicator />
+  if (!isAdmin) return null;
 
   return (
     <Tabs
